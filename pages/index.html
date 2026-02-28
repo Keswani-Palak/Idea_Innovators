@@ -5,15 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PlayStation Main Page</title>
   <style>
+    :root {
+      --primary-pink: #ff006e;
+      --accent-violet: #a020f0;
+      --text-light: #eee;
+    }
     body {
       margin: 0;
       padding: 0;
       background: linear-gradient(135deg, #0B0B0F 0%, #1a0a2e 50%, #0B0B0F 100%);
-      color: #EEE;
-      font-family: 'Segoe UI', sans-serif;
+      color: var(--text-light);
+      font-family: 'Montserrat', 'Segoe UI', sans-serif;
       -webkit-font-smoothing: antialiased;
       animation: fadeIn 0.8s ease-in;
       background-attachment: fixed;
+      font-size: 18px; /* larger base font */
     }
 
     /* page & section entrance */
@@ -119,10 +125,10 @@
 
     /* ─── common section styles ─────────────────────────── */
     .section-title {
-      font-size: 1.5rem;
+      font-size: 2rem;
       margin-bottom: 1.5rem;
       font-weight: 700;
-      background: linear-gradient(90deg, #a020f0, #ff006e);
+      background: linear-gradient(90deg, var(--accent-violet), var(--primary-pink));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -191,11 +197,23 @@
       object-fit: cover;
       border-radius: 0.75rem;
       display: block;
+      animation: gifEffect 2s infinite alternate, imgGlow 3s infinite;
+      transition: transform 0.4s ease, filter 0.4s ease;
+    }
+    .card img:hover {
+      transform: scale(1.08) rotate(1deg);
+      filter: drop-shadow(0 0 15px rgba(255,0,110,0.6)) brightness(1.1);
+    }
+
+    @keyframes imgGlow {
+      0% { filter: drop-shadow(0 0 10px rgba(160,32,240,0.4)); }
+      50% { filter: drop-shadow(0 0 20px rgba(255,0,110,0.6)); }
+      100% { filter: drop-shadow(0 0 10px rgba(160,32,240,0.4)); }
     }
     .card .title {
       margin-top: 0.8rem;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.4rem;
       color: #fff;
       transition: color 0.3s ease;
       text-align: center;
@@ -295,6 +313,13 @@
         margin-top: 0.5rem;
       }
     }
+    
+    /* GIF-like animation for images */
+    @keyframes gifEffect {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02) rotate(1deg); }
+      100% { transform: scale(1); }
+    }
   </style>
 </head>
 <body>
@@ -357,7 +382,8 @@
         </svg>
         <span>Rewards</span>
       </button>
-      <button>Login</button>
+      <button onclick="window.location.href='dashboard.html'">Dashboard</button>
+      <button onclick="window.location.href='login.html'">Login</button>
     </div>
   </header>
 
@@ -408,5 +434,31 @@
     </div>
   </section>
 
+  <script>
+    // simple scroll-based parallax for sections
+    document.addEventListener('scroll', function() {
+      const sections = document.querySelectorAll('section');
+      const scrollTop = window.pageYOffset;
+      sections.forEach((sec, i) => {
+        const offset = sec.offsetTop;
+        const depth = (i + 1) * 20;
+        const movement = (scrollTop - offset) / depth;
+        sec.style.transform = `translateY(${movement}px)`;
+      });
+    });
+
+    // subtle card tilt effect on mouse move
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width/2;
+        const y = e.clientY - rect.top - rect.height/2;
+        card.style.transform = `perspective(600px) rotateY(${x/20}deg) rotateX(${ -y/20 }deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  </script>
 </body>
 </html>

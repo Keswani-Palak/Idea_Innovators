@@ -4,303 +4,179 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Social Chat - SKYVERSE</title>
-  <style>
+  <style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+  
     /* reset & base */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #0B0B0F 0%, #1a0a2e 50%, #0B0B0F 100%);
-      color: #EEE;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-      -webkit-font-smoothing: antialiased;
-      animation: fadeIn 0.8s ease-in;
+    *{box-sizing:border-box;margin:0;padding:0;}
+    :root {
+      --primary-pink: #ff006e;
+      --accent-violet: #a020f0;
+      --text-light: #eee;
+      --bg-gradient: linear-gradient(135deg,#0B0B0F 0%,#1a0a2e 50%,#0B0B0F 100%);
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    body{
+      font-family:'Poppins', 'Roboto', 'Segoe UI',sans-serif;
+      background:linear-gradient(135deg,#0B0B0F 0%,#1a0a2e 50%,#0B0B0F 100%);
+      color:var(--text-light);
+      display:flex;
+      height:100vh;
+      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+      animation:fadeIn 0.8s ease-in;
+    }
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    @keyframes slideIn{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:translateX(0);}}
+    @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 
-    .container {
-      display: flex;
-      flex: 1;
-      backdrop-filter: blur(5px);
-    }
+    .container{display:flex;flex:1;backdrop-filter:blur(5px);}
 
-    .friends-list {
-      width: 260px;
-      background: rgba(17,17,17,0.9);
-      border-right: 1px solid #222;
-      display: flex;
-      flex-direction: column;
+    .friends-list{
+      width:260px;
+      background:rgba(17,17,17,0.85);
+      border-right:1px solid #222;
+      display:flex;flex-direction:column;
+      backdrop-filter:blur(8px);
+      animation:slideIn .8s ease-out;
     }
-    .friends-list .title {
-      padding: 1rem;
-      font-size: 1.3rem;
-      font-weight: 700;
-      border-bottom: 1px solid #222;
-      background: rgba(138,43,226,0.05);
-      color: #fff;
+    .friends-list .title{
+      padding:1rem;
+      font-size:1.4rem;font-weight:700;
+      border-bottom:1px solid #222;
+      background:linear-gradient(135deg,var(--accent-violet),var(--primary-pink));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      letter-spacing:1px;
+      text-shadow:0 0 8px rgba(138,43,226,0.5);
     }
-    .friend {
-      padding: 0.75rem 1rem;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      transition: background 0.2s;
-      border-radius: 0.5rem;
-      margin: 0.25rem 0.5rem;
+    .friend{
+      padding:.75rem 1rem;display:flex;align-items:center;
+      cursor:pointer;transition:background .2s,transform .2s;
+      border-radius:.5rem;margin:.25rem .5rem;
     }
-    .friend:hover { background: rgba(138,43,226,0.15); }
-    .friend.selected { background: rgba(138,43,226,0.25); }
-    .friend .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #333;
-      margin-right: 0.75rem;
-      position: relative;
+    .friend:hover{background:rgba(138,43,226,0.15);transform:scale(1.03);}
+    .friend.selected{box-shadow:0 0 10px #a020f0;}
+    .friend .avatar{
+      width:36px;height:36px;border-radius:50%;background:#333;
+      margin-right:.75rem;position:relative;
     }
-    .friend .avatar::after {
-      content: '';
-      width: 10px;
-      height: 10px;
-      background: #4caf50;
-      border: 2px solid #0B0B0F;
-      border-radius: 50%;
-      position: absolute;
-      bottom: 0;
-      right: 0;
+    .friend .name{font-weight:600; background:linear-gradient(90deg,var(--accent-violet),var(--primary-pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+    .friend:hover .name{animation:textGlow 1.2s infinite;} 
+    @keyframes textGlow{0%,100%{text-shadow:0 0 6px var(--primary-pink);}50%{text-shadow:0 0 12px var(--accent-violet);}}
+    .friend .avatar::after{
+      content:'';width:10px;height:10px;
+      background:#4caf50;border:2px solid #0B0B0F;
+      border-radius:50%;position:absolute;bottom:0;right:0;
     }
 
-    .chat-area {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
+    .chat-area{flex:1;display:flex;flex-direction:column;}
+    .chat-header{
+      padding:1rem;display:flex;align-items:center;justify-content:space-between;
+      border-bottom:1px solid #222;
+      background:var(--bg-gradient);backdrop-filter:blur(10px);
+      animation:fadeIn 1s ease;
+      background-size:200% 200%;
+      animation:fadeIn 1s ease, headerGradient 6s ease infinite;
     }
-    .chat-header {
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #222;
-      background: rgba(11,11,15,0.95);
-      backdrop-filter: blur(10px);
+    @keyframes headerGradient{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+    .chat-header .info{display:flex;align-items:center;}
+    .chat-header .info .avatar{width:40px;height:40px;border-radius:50%;background:#333;margin-right:.75rem;}
+    .chat-header .info .name{font-size:1.2rem;font-weight:600; color:var(--primary-pink);}
+    .chat-header .info .status{font-size:.85rem;color:#4caf50;margin-left:.5rem;}
+    .chat-header .invite{
+      background:linear-gradient(135deg,var(--primary-pink),var(--accent-violet));border:1px solid var(--accent-violet);color:#061018;
+      padding:.5rem 1rem;border-radius:.5rem;cursor:pointer;
+      transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden;
     }
-    .chat-header .info {
-      display: flex;
-      align-items: center;
+    .chat-header .invite:hover{animation:glowBtn 1.2s infinite;}
+    @keyframes glowBtn{0%,100%{box-shadow:0 0 8px var(--accent-violet);}50%{box-shadow:0 0 16px var(--primary-pink);}}
+    .chat-header .invite::before{
+      content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+      transition:left .5s ease;
     }
-    .chat-header .info .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #333;
-      margin-right: 0.75rem;
-    }
-    .chat-header .info .name {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-    .chat-header .info .status {
-      font-size: 0.85rem;
-      color: #4caf50;
-      margin-left: 0.5rem;
-    }
-    .chat-header .invite {
-      background: transparent;
-      border: 1px solid #a020f0;
-      color: #a020f0;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: box-shadow 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .chat-header .invite::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s ease;
-    }
-    .chat-header .invite:hover::before { left: 100%; }
-    .chat-header .invite:hover { box-shadow: 0 0 12px #a020f0; }
+    .chat-header .invite:hover::before{left:100%;}
+    .chat-header .invite:hover{box-shadow:0 0 12px #a020f0;}
 
-    .messages {
-      flex: 1;
-      padding: 1rem;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+    .messages{
+      flex:1;padding:1rem;overflow-y:auto;
+      display:flex;flex-direction:column;gap:.75rem;
+      background:linear-gradient(180deg,rgba(11,11,15,0.9) 0%,rgba(17,17,17,0.9) 100%);
     }
-    .message {
-      max-width: 70%;
-      padding: 0.6rem 1rem;
-      border-radius: 0.75rem;
-      position: relative;
-      word-wrap: break-word;
-      transition: transform 0.2s;
+    .message{
+      max-width:70%;padding:.6rem 1rem;border-radius:.75rem;
+      position:relative;word-wrap:break-word;transition:transform .2s;
     }
-    .message.sent {
-      align-self: flex-end;
-      background: linear-gradient(135deg, #a020f0, #ff006e);
-      color: #fff;
+    .message.sent{align-self:flex-end;
+      background:linear-gradient(135deg,var(--accent-violet),var(--primary-pink));color:#fff;
+      animation:pop 0.3s ease;
     }
-    .message.received {
-      align-self: flex-start;
-      background: #333;
-      color: #ddd;
-    }
-    .message .time {
-      font-size: 0.65rem;
-      color: #aaa;
-      margin-top: 0.25rem;
-      text-align: right;
-    }
-    .message:hover { transform: scale(1.02); }
+    .message.received{align-self:flex-start;background:#333;color:#ddd;}
+    @keyframes pop{0%{transform:scale(0.8);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+    .message .time{font-size:.65rem;color:#aaa;margin-top:.25rem;text-align:right;}
+    .message:hover{transform:scale(1.02);}
 
-    .input-area {
-      padding: 0.75rem;
-      border-top: 1px solid #222;
-      display: flex;
-      gap: 0.5rem;
-      background: rgba(11,11,15,0.95);
-      backdrop-filter: blur(10px);
+    .input-area{
+      padding:.75rem;border-top:1px solid #222;
+      display:flex;gap:.5rem;
+      background:rgba(11,11,15,0.95);backdrop-filter:blur(10px);
+      animation:slideUp .8s ease;
     }
-    .input-area input {
-      flex: 1;
-      padding: 0.6rem 0.8rem;
-      border-radius: 0.5rem;
-      border: 1px solid #444;
-      background: #111;
-      color: #eee;
+    .input-area input{
+      flex:1;padding:.6rem .8rem;border-radius:.5rem;border:1px solid #444;
+      background:#111;color:#eee;
     }
-    .input-area input:focus { outline: none; border-color: #a020f0; }
-    .input-area button {
-      background: linear-gradient(135deg, #a020f0, #ff006e);
-      border: none;
-      color: #fff;
-      padding: 0.6rem 1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      box-shadow: 0 0 8px rgba(160,32,240,0.4);
-      transition: box-shadow 0.2s, transform 0.2s;
-      position: relative;
-      overflow: hidden;
+    .input-area input:focus{outline:none;border-color:#a020f0;}
+    .input-area button{
+      background:linear-gradient(135deg,#a020f0,#ff006e);
+      border:none;color:#fff;padding:.6rem 1rem;border-radius:.5rem;
+      cursor:pointer;box-shadow:0 0 8px rgba(160,32,240,0.4);
+      transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden;
     }
-    .input-area button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s ease;
+    .input-area button::before{
+      content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+      transition:left .5s ease;
     }
-    .input-area button:hover::before { left: 100%; }
-    .input-area button:hover { box-shadow: 0 0 16px rgba(160,32,240,0.6); transform: translateY(-2px); }
+    .input-area button:hover::before{left:100%;}
+    .input-area button:hover{box-shadow:0 0 16px rgba(160,32,240,0.6);transform:translateY(-2px);}
 
-    /* responsive */
-    @media (max-width: 700px) {
-      .friends-list { display: none; }
-      .chat-area { flex: 1; }
-    }
+    @media(max-width:700px){.friends-list{display:none;} .chat-area{flex:1;}}
   </style>
 </head>
 <body>
   <div class="container">
     <div class="friends-list">
       <div class="title">Friends Online</div>
-      <div class="friend selected" data-name="Alex">
-        <div class="avatar"></div>
-        <div class="name">Alex</div>
-      </div>
-      <div class="friend" data-name="Blake">
-        <div class="avatar"></div>
-        <div class="name">Blake</div>
-      </div>
-      <div class="friend" data-name="Casey">
-        <div class="avatar"></div>
-        <div class="name">Casey</div>
-      </div>
-      <div class="friend" data-name="Dana">
-        <div class="avatar"></div>
-        <div class="name">Dana</div>
-      </div>
-      <div class="friend" data-name="Eli">
-        <div class="avatar"></div>
-        <div class="name">Eli</div>
-      </div>
+      <div class="friend selected" data-name="Alex"><div class="avatar"></div><div class="name">Alex</div></div>
+      <div class="friend" data-name="Blake"><div class="avatar"></div><div class="name">Blake</div></div>
+      <div class="friend" data-name="Casey"><div class="avatar"></div><div class="name">Casey</div></div>
+      <div class="friend" data-name="Dana"><div class="avatar"></div><div class="name">Dana</div></div>
+      <div class="friend" data-name="Eli"><div class="avatar"></div><div class="name">Eli</div></div>
     </div>
     <div class="chat-area">
       <div class="chat-header">
-        <div class="info">
-          <div class="avatar"></div>
-          <div class="name">Alex</div>
-          <div class="status">Online</div>
-        </div>
+        <div class="info"><div class="avatar"></div><div class="name">Alex</div><div class="status">Online</div></div>
         <button class="invite">Invite to Game</button>
       </div>
       <div class="messages" id="messages"></div>
-      <div class="input-area">
-        <input type="text" id="messageInput" placeholder="Type a message..." />
-        <button id="sendBtn">Send</button>
-      </div>
+      <div class="input-area"><input type="text" id="messageInput" placeholder="Type a message..." /><button id="sendBtn">Send</button></div>
     </div>
   </div>
   <script>
-    const friends = document.querySelectorAll('.friend');
-    const messagesEl = document.getElementById('messages');
-    const input = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-    let activeFriend = 'Alex';
-
-    function setActiveFriend(el) {
-      friends.forEach(f => f.classList.remove('selected'));
-      el.classList.add('selected');
-      activeFriend = el.dataset.name;
-      document.querySelector('.chat-header .name').textContent = activeFriend;
-      clearMessages();
-    }
-
-    friends.forEach(f => {
-      f.addEventListener('click', () => setActiveFriend(f));
-    });
-
-    function clearMessages() {
-      messagesEl.innerHTML = '';
-    }
-
-    function addMessage(text, type) {
-      if (!text) return;
-      const msg = document.createElement('div');
-      msg.className = 'message ' + type;
-      msg.innerHTML = text + '<div class="time">' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + '</div>';
-      messagesEl.appendChild(msg);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
-
-    sendBtn.addEventListener('click', () => {
-      const txt = input.value.trim();
-      if (!txt) return;
-      addMessage(txt, 'sent');
-      input.value = '';
-      setTimeout(() => {
-        addMessage('Auto-reply from ' + activeFriend, 'received');
-      }, 1200 + Math.random() * 800);
-    });
-
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') sendBtn.click();
-    });
-
-    // init
-    addMessage('Hey there! Ready to play?', 'received');
+    const friends=document.querySelectorAll('.friend');
+    const messagesEl=document.getElementById('messages');
+    const input=document.getElementById('messageInput');
+    const sendBtn=document.getElementById('sendBtn');
+    let activeFriend='Alex';
+    function setActiveFriend(el){friends.forEach(f=>f.classList.remove('selected'));el.classList.add('selected');activeFriend=el.dataset.name;document.querySelector('.chat-header .name').textContent=activeFriend;clearMessages();}
+    friends.forEach(f=>{f.addEventListener('click',()=>setActiveFriend(f));});
+    function clearMessages(){messagesEl.innerHTML='';}
+    function addMessage(text,type){if(!text) return;const msg=document.createElement('div');msg.className='message '+type;msg.innerHTML=text+'<div class="time">'+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'</div>';messagesEl.appendChild(msg);messagesEl.scrollTop=messagesEl.scrollHeight;}
+    sendBtn.addEventListener('click',()=>{const txt=input.value.trim();if(!txt) return;addMessage(txt,'sent');input.value='';setTimeout(()=>{addMessage('Auto-reply from '+activeFriend,'received');},1200+Math.random()*800);});
+    input.addEventListener('keydown',e=>{if(e.key==='Enter') sendBtn.click();});
+    addMessage('Hey there! Ready to play?','received');
+    document.addEventListener('scroll',()=>{const scroll=window.pageYOffset;document.querySelector('.friends-list').style.transform=`translateY(${scroll/5}px)`;document.querySelector('.chat-header').style.backgroundPosition=`center ${-scroll/10}px`;});
+    document.querySelectorAll('.friend .avatar').forEach(av=>{av.addEventListener('mousemove',e=>{const rect=av.getBoundingClientRect();const x=e.clientX-rect.left-rect.width/2;const y=e.clientY-rect.top-rect.height/2;av.style.transform=`perspective(400px) rotateY(${x/15}deg) rotateX(${ -y/15 }deg)`;});av.addEventListener('mouseleave',()=>{av.style.transform='';});});
   </script>
 </body>
 </html>

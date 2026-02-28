@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>PlayVerse — Subscription</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+      :root {
+        --bg: #0b0b0f;
+        --violet: #8a2be2;
+        --primary-pink: var(--violet); /* pink replaced by violet */
+        --gold: #daa520;
+        --muted: #9aa0b2;
+        --card-bg: rgba(255, 255, 255, 0.02);
+        --glass: rgba(255, 255, 255, 0.05);
+        --text-light: #e8eaf6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: #e8eaf6;
+        font-family:
+          "Poppins",
+          Roboto,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Arial;
+        display: flex;
+        flex-direction: column;
+      }
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        flex: 1;
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        animation: containerAppear 0.8s ease-out;
+      }
+      @keyframes containerAppear {
+        0% {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .wrap {
+        width: 100%;
+        max-width: 1100px;
+      }
+      .center {
+        text-align: center;
+      }
+      /* header section */
+      .header-section {
+        margin-bottom: 40px;
+      }
+      .header-section h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: var(--accent-violet);
+        animation: headerGlow 2s infinite;
+      }
+      .header-section p {
+        margin-top: 8px;
+        font-size: 1rem;
+        color: var(--muted);
+      }
+      /* reward card */
+      .reward-card {
+        background: var(--card-bg);
+        padding: 24px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        max-width: 500px;
+        margin: 0 auto 50px;
+        position: relative;
+      }
+      .reward-card .balance {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--gold);
+        animation: balanceGlow 2s infinite;
+      }
+      @keyframes balanceGlow {
+        0%,
+        100% {
+          text-shadow: 0 0 8px var(--gold);
+        }
+        50% {
+          text-shadow: 0 0 20px var(--gold);
+        }
+      }
+      @keyframes titleGlow {
+        0%,
+        100% {
+          text-shadow: 0 0 8px var(--accent-violet);
+        }
+        50% {
+          text-shadow: 0 0 16px var(--accent-violet);
+        }
+      }
+      .reward-card .discount {
+        margin-top: 8px;
+        font-size: 1.1rem;
+        color: #fff;
+      }
+      .reward-card .explain {
+        margin-top: 4px;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .reward-card .toggle {
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .toggle input {
+        margin-right: 8px;
+        transform: scale(1.2);
+      }
+      /* plans grid */
+      .plans {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+      }
+      .plan-card {
+        background: var(--card-bg);
+        padding: 24px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s,
+          background 0.3s;
+        animation: cardEnter 0.8s ease forwards;
+        opacity: 0;
+      }
+      .plan-card[data-base="0"] {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+      }
+      .plan-card[data-base="999"] {
+        background: linear-gradient(
+          135deg,
+          rgba(138, 43, 226, 0.15),
+          rgba(138, 43, 226, 0.05)
+        );
+      }
+      .plan-card[data-base="1499"] {
+        background: linear-gradient(
+          135deg,
+          rgba(218, 165, 32, 0.15),
+          rgba(218, 165, 32, 0.05)
+        );
+      }
+      .plan-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 32px rgba(138, 43, 226, 0.5);
+      }
+      .plan-card.highlight {
+        border: 1px solid var(--violet);
+        box-shadow: 0 12px 32px rgba(138, 43, 226, 0.6);
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes cardEnter {
+        0% {
+          opacity: 0;
+          transform: scale(0.9) translateY(20px);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.02) translateY(-5px);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+      .plan-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--accent-violet);
+        animation: titleGlow 3s infinite;
+      }
+      .price {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+      .original {
+        font-size: 1rem;
+        color: var(--muted);
+        text-decoration: line-through;
+      }
+      .features {
+        margin-top: 16px;
+        flex: 1;
+      }
+      .features li {
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+      }
+      .upgrade-btn {
+        margin-top: 24px;
+        padding: 12px 0;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        color: #061018;
+        background: var(--violet);
+        transition:
+          box-shadow 0.2s,
+          transform 0.2s,
+          background 0.4s;
+        position: relative;
+        overflow: hidden;
+      }
+      .upgrade-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+      .upgrade-btn:hover::before {
+        left: 100%;
+      }
+      .upgrade-btn:hover {
+        box-shadow: 0 0 16px var(--violet);
+        transform: scale(1.05);
+      }
+      .plan-card[data-base="1499"] .upgrade-btn {
+        background: var(--gold);
+        color: #061018;
+      }
+      .badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: var(--violet);
+        color: #fff;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        border-radius: 4px;
+      }
+      @media (max-width: 600px) {
+        .header-section h1 {
+          font-size: 2rem;
+        }
+      }
+      @keyframes headerGlow {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+      /* parallax wrapper */
+      .wrap {
+        transition: transform 0.2s;
+      }
+      /* shimmer effect on balance */
+      .balance {
+        animation: glow 2s infinite;
+      }
+      @keyframes glow {
+        0% {
+          text-shadow: 0 0 8px var(--gold);
+        }
+        50% {
+          text-shadow: 0 0 20px var(--gold);
+        }
+        100% {
+          text-shadow: 0 0 8px var(--gold);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="wrap">
+        <div class="header-section center">
+          <h1>Upgrade Your Gaming Experience</h1>
+          <p>Use your earned rewards to unlock exclusive discounts.</p>
+        </div>
+        <div class="reward-card center" id="rewardCard">
+          <div class="balance" id="balance">240 Coins</div>
+          <div class="discount" id="discount">₹120 Discount</div>
+          <div class="explain">100 Coins = ₹50 Discount</div>
+          <div class="toggle">
+            <input type="checkbox" id="applyRewards" /><label for="applyRewards"
+              >Apply Rewards</label
+            >
+          </div>
+        </div>
+        <div class="plans" id="plans">
+          <div class="plan-card" data-base="0" data-coinprice="0">
+            <div class="plan-title">Free Plan</div>
+            <div class="price"><span class="current">₹0</span></div>
+            <ul class="features">
+              <li>Basic access</li>
+              <li>Standard rewards</li>
+              <li>Basic theme</li>
+            </ul>
+            <button class="upgrade-btn">Select</button>
+          </div>
+          <div class="plan-card highlight" data-base="999" data-coinprice="879">
+            <div class="badge">After Rewards</div>
+            <div class="plan-title">Pro Plan</div>
+            <div class="price">
+              <span class="original">₹999</span><br /><span class="current"
+                >₹879</span
+              >
+            </div>
+            <ul class="features">
+              <li>Exclusive badges</li>
+              <li>Premium themes</li>
+              <li>Early access</li>
+            </ul>
+            <button class="upgrade-btn">Upgrade Now</button>
+          </div>
+          <div class="plan-card" data-base="1499" data-coinprice="1379">
+            <div class="plan-title">Elite Plan</div>
+            <div class="price">
+              <span class="original">₹1499</span><br /><span class="current"
+                >₹1379</span
+              >
+            </div>
+            <ul class="features">
+              <li>All Pro features</li>
+              <li>Bonus reward multiplier</li>
+              <li>Priority access</li>
+            </ul>
+            <button class="upgrade-btn">Upgrade Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const balanceEl = document.getElementById("balance");
+      const discountEl = document.getElementById("discount");
+      const applyCheckbox = document.getElementById("applyRewards");
+      const plans = document.querySelectorAll(".plan-card");
+      let coins = 240;
+
+      function updatePrices() {
+        const apply = applyCheckbox.checked;
+        plans.forEach((card) => {
+          const base = parseInt(card.dataset.base, 10);
+          const priceEl = card.querySelector(".price .current");
+          if (!apply || base === 0) {
+            priceEl.textContent =
+              base === 0 ? "₹0" : "₹" + card.dataset.coinprice;
+            if (card.querySelector(".original"))
+              card.querySelector(".original").style.display =
+                base === 0 ? "none" : "block";
+          } else {
+            // discount coins -> rupees
+            const discount = Math.floor(coins / 100) * 50;
+            const newPrice = Math.max(0, base - discount);
+            priceEl.textContent = "₹" + newPrice;
+            if (card.querySelector(".original"))
+              card.querySelector(".original").style.display = "block";
+          }
+        });
+        const discVal = Math.floor(coins / 100) * 50;
+        discountEl.textContent = `₹${discVal} Discount`;
+      }
+
+      applyCheckbox.addEventListener("change", updatePrices);
+      updatePrices();
+
+      // parallax mouse move
+      const wrapElem = document.querySelector(".wrap");
+      window.addEventListener("mousemove", (e) => {
+        const w = window.innerWidth,
+          h = window.innerHeight;
+        const nx = (e.clientX - w / 2) / w;
+        const ny = (e.clientY - h / 2) / h;
+        wrapElem.style.transform = `translate3d(${nx * 10}px,${ny * 10}px,0)`;
+      });
+    </script>
+  </body>
+</html>

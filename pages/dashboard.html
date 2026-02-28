@@ -1,195 +1,428 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>PlayVerse — Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <style>
-    :root{--bg:#0B0B0F;--violet:#8A2BE2;--muted:#9aa0b2;--card:#0f1220;--glass:rgba(255,255,255,0.02)}
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:var(--bg);color:#e8eaf6;font-family:Roboto,system-ui,-apple-system,Segoe UI,Arial;display:flex;flex-direction:column}
-
-    /* Sticky top navigation */
-    header.topbar{position:sticky;top:0;z-index:60;backdrop-filter:blur(6px);background:linear-gradient(180deg,rgba(11,11,15,0.6),rgba(11,11,15,0.35));border-bottom:1px solid rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;padding:12px 20px}
-    .logo{font-weight:800;letter-spacing:1px;font-size:18px}
-    .logo span{color:var(--violet)}
-    .nav-left{display:flex;align-items:center;gap:12px}
-    .nav-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--violet),#b266ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#061018}
-    .nav-user{display:flex;flex-direction:column;line-height:1}
-    .nav-username{font-weight:700}
-    .nav-level{font-size:12px;color:var(--muted)}
-
-    .nav-right{display:flex;align-items:center;gap:12px}
-    .icon-btn{background:transparent;border:0;color:var(--muted);padding:8px;border-radius:8px;cursor:pointer}
-    .sub-pill{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:linear-gradient(90deg,rgba(138,43,226,0.08),rgba(138,43,226,0.02));color:var(--violet);font-weight:700}
-    .upgrade{background:transparent;border:1px solid rgba(138,43,226,0.16);color:var(--violet);padding:8px 12px;border-radius:8px;cursor:pointer}
-
-    main{flex:1;padding:28px 20px;display:flex;justify-content:center}
-    .wrap{width:100%;max-width:1100px;perspective:1200px}
-
-    /* Layout */
-    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start}
-
-    /* Continue Playing (primary) */
-    .continue-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
-    .continue-card h2{margin:0 0 12px 0;font-size:18px}
-    .continue-big{display:flex;gap:18px;align-items:center}
-    .thumb-lg{width:220px;height:124px;border-radius:12px;background:linear-gradient(135deg,#181824,#2a1538);box-shadow:inset 0 -8px 30px rgba(0,0,0,0.5)}
-    .continue-info{flex:1}
-    .game-title{font-weight:800;font-size:18px;margin-bottom:8px}
-    .big-progress{height:12px;background:#070709;border-radius:999px;overflow:hidden;margin-bottom:12px}
-    .big-fill{height:100%;width:0;background:linear-gradient(90deg,var(--violet),#b266ff);box-shadow:0 12px 40px rgba(138,43,226,0.12);transition:width 900ms cubic-bezier(.2,.9,.2,1)}
-    .resume-cta{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;border:1px solid rgba(138,43,226,0.16);color:var(--violet);cursor:pointer;font-weight:800}
-
-    /* Achievements preview (horizontal) */
-    .ach-row{display:flex;align-items:center;gap:12px;overflow:auto;padding:10px 6px}
-    .badge-pill{min-width:140px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:12px;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,0.02)}
-    .badge-ico{width:44px;height:44px;border-radius:8px;background:linear-gradient(90deg,var(--violet),#b266ff);display:flex;align-items:center;justify-content:center;font-weight:800;color:#061018}
-    .view-all{margin-left:auto;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer}
-
-    /* Right column cards */
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
-    .progress-small{margin-bottom:10px}
-    .friends-row{display:flex;align-items:center;gap:10px}
-    .friend{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2b1b3a,#1b2740);display:flex;align-items:center;justify-content:center;font-weight:700}
-    .quick-actions{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-    .primary{background:linear-gradient(90deg,var(--violet),#b266ff);color:#061018;padding:10px;border-radius:8px;border:0;cursor:pointer;font-weight:800}
-
-    /* small helpers */
-    h3.section-title{font-size:13px;margin:0 0 10px 0;color:#e8eaf6}
-
-    @media (max-width:980px){.grid{grid-template-columns:1fr}.thumb-lg{width:160px;height:96px}}
-    @media (prefers-reduced-motion:reduce){.big-fill,.game-fill,.xp-fill{transition:none!important;animation:none!important}}
-  </style>
-</head>
-<body>
-  <header class="topbar">
-    <div class="nav-left">
-      <div class="nav-avatar">P</div>
-      <div class="nav-user">
-        <div class="nav-username">Palak</div>
-        <div class="nav-level">Lv. 12</div>
-      </div>
-    </div>
-
-    <div class="nav-right">
-      <button class="icon-btn" aria-label="notifications">🔔</button>
-      <div class="sub-pill">Free</div>
-      <button class="upgrade" id="upgradeBtn">Upgrade</button>
-    </div>
-  </header>
-
-  <main>
-    <div class="wrap">
-      <div class="grid">
-        <!-- Primary column -->
-        <div>
-          <!-- Continue Playing (primary) -->
-          <section class="continue-card card-3d">
-            <h2>Continue Playing</h2>
-            <div class="continue-big">
-              <div class="thumb-lg" aria-hidden></div>
-              <div class="continue-info">
-                <div class="game-title">Horizon: Shadow</div>
-                <div class="big-progress"><div class="big-fill" data-pct="68"></div></div>
-                <div style="display:flex;gap:12px;align-items:center">
-                  <div style="color:var(--muted)">68% completed • Last played 2 days ago</div>
-                  <button class="resume-cta" data-game="horizon">▶ Resume</button>
-                </div>
-              </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skyverse Profile</title>
+    <style>
+      /* ================= BASE ================= */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+      body {
+        background: linear-gradient(
+          135deg,
+          #0b0b0f 0%,
+          #1a0a2e 50%,
+          #0b0b0f 100%
+        );
+        background-attachment: fixed;
+        color: #eee;
+        padding-top: 80px;
+        overflow-x: hidden;
+      } /* Floating background glow */
+      body::before {
+        content: "";
+        position: fixed;
+        top: -200px;
+        left: -200px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(160, 32, 240, 0.25),
+          transparent 70%
+        );
+        animation: floatGlow 10s infinite alternate ease-in-out;
+        z-index: -1;
+      }
+      @keyframes floatGlow {
+        from {
+          transform: translate(0, 0);
+        }
+        to {
+          transform: translate(250px, 150px);
+        }
+      } /* ================= NAV ================= */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+        background: rgba(11, 11, 15, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 2px solid #a020f0;
+        box-shadow: 0 4px 20px rgba(160, 32, 240, 0.3);
+        z-index: 1000;
+      }
+      
+      .nav .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #a020f0, #ff006e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 20px rgba(160, 32, 240, 0.5);
+      font-family: 'Arial Black', sans-serif;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .nav .logo:hover {
+      transform: scale(1.05) rotateZ(2deg);
+    }
+    .nav .logo svg {
+      animation: rotateLogo 8s linear infinite;
+    }
+    .nav .logo:hover svg {
+      animation: rotateLogo 3s linear infinite;
+    }
+    @keyframes rotateLogo {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+       /* ================= LAYOUT ================= */
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+      } /* ================= CARD ================= */
+      .card {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08),
+          rgba(160, 32, 240, 0.1)
+        );
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(160, 32, 240, 0.3);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 10px;
+        transition: 0.4s;
+        transform-style: preserve-3d;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: cardReveal 0.8s forwards;
+      }
+      .card:nth-child(1) {
+        animation-delay: 0.2s;
+      }
+      .card:nth-child(2) {
+        animation-delay: 0.4s;
+      }
+      .card:nth-child(3) {
+        animation-delay: 0.6s;
+      }
+      .card:nth-child(4) {
+        animation-delay: 0.8s;
+      }
+      @keyframes cardReveal {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .card:hover {
+        box-shadow: 0 15px 40px rgba(160, 32, 240, 0.5);
+      }
+      .section-title {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        background: linear-gradient(90deg, #a020f0, #ff006e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      } /* ================= PROFILE ================= */
+      .profile-top {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+      .avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #a020f0, #ff006e);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        font-weight: bold;
+        color: #fff;
+        position: relative;
+      } /* Rotating glow */
+      .avatar::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: -6px;
+        width: 132px;
+        height: 132px;
+        border-radius: 50%;
+        background: conic-gradient(#a020f0, #ff006e, #a020f0);
+        animation: rotateBorder 4s linear infinite;
+        z-index: -1;
+      }
+      @keyframes rotateBorder {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .username {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+      .level {
+        color: #ccc;
+        margin-top: 5px;
+      } /* ================= XP ================= */
+      .xp-bar {
+        height: 14px;
+        background: #070709;
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 10px;
+      }
+      .xp-fill {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, #a020f0, #ff006e);
+        position: relative;
+        transition: width 1s ease;
+      } /* Shimmer */
+      .xp-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        animation: shimmer 2s infinite;
+      }
+      @keyframes shimmer {
+        100% {
+          left: 100%;
+        }
+      } /* ================= ACHIEVEMENTS ================= */
+      .badge-row {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        padding: 10px 15px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(160, 32, 240, 0.4);
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .badge:hover {
+        transform: scale(1.15);
+        box-shadow: 0 0 20px rgba(160, 32, 240, 0.6);
+      } /* ================= SOCIAL ================= */
+      .friends {
+        display: flex;
+        gap: 10px;
+      }
+      .friend {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #a020f0, #ff006e);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .friend:hover {
+        transform: scale(1.2);
+        box-shadow: 0 0 15px rgba(160, 32, 240, 0.6);
+      } /* ================= BUTTON ================= */
+      .primary-btn {
+        margin-top: 1rem;
+        background: linear-gradient(135deg, #a020f0, #ff006e);
+        border: none;
+        padding: 10px 15px;
+        border-radius: 10px;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+      .primary-btn span {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+      }
+      @keyframes ripple {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      } /* Responsive */
+      @media (max-width: 900px) {
+        .container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav"><div class="logo">
+           <div class="logo">
+      <svg width="50" height="50" viewBox="0 0 50 50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+        <defs>
+          <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#a020f0;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#ff006e;stop-opacity:1" />
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <!-- Outer circle -->
+        <circle cx="25" cy="25" r="24" fill="none" stroke="url(#logoGrad)" stroke-width="2" opacity="0.6"/>
+        <!-- Inner geometric shape -->
+        <polygon points="25,8 38,17 38,33 25,42 12,33 12,17" fill="url(#logoGrad)" opacity="0.8" filter="url(#glow)"/>
+        <!-- Center circle -->
+        <circle cx="25" cy="25" r="8" fill="none" stroke="url(#logoGrad)" stroke-width="1.5"/>
+        <!-- Decorative dots -->
+        <circle cx="25" cy="12" r="1.5" fill="#ff006e"/>
+        <circle cx="35" cy="25" r="1.5" fill="#a020f0"/>
+        <circle cx="25" cy="38" r="1.5" fill="#ff006e"/>
+        <circle cx="15" cy="25" r="1.5" fill="#a020f0"/>
+      </svg>
+       SKYVERSE</div></header>
+    <div class="container">
+      <!-- LEFT -->
+      <div>
+        <!-- Profile -->
+        <div class="card">
+          <div class="profile-top">
+            <div class="avatar">P</div>
+            <div>
+              <div class="username">Palak</div>
+              <div class="level">Level 12 Gamer</div>
             </div>
-
-            <!-- Achievements preview -->
-            <div style="margin-top:16px">
-              <h3 class="section-title">Achievements</h3>
-              <div class="ach-row" aria-label="achievements">
-                <div class="badge-pill"><div class="badge-ico">🏅</div><div><div style="font-weight:700">First Win</div><div style="color:var(--muted);font-size:13px">Unlocked</div></div></div>
-                <div class="badge-pill"><div class="badge-ico">🔥</div><div><div style="font-weight:700">7 Day Streak</div><div style="color:var(--muted);font-size:13px">Unlocked</div></div></div>
-                <div class="badge-pill"><div class="badge-ico">🎯</div><div><div style="font-weight:700">Perfect Score</div><div style="color:var(--muted);font-size:13px">Locked</div></div></div>
-                <button class="view-all">View All</button>
-              </div>
-            </div>
-          </section>
-
-          <!-- Social preview (light) -->
-          <section style="margin-top:14px" class="card">
-            <h3 class="section-title">Social</h3>
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div style="display:flex;flex-direction:column">
-                <div style="color:var(--muted);font-size:13px;margin-bottom:8px">Friends online</div>
-                <div class="friends-row">
-                  <div class="friend">A</div>
-                  <div class="friend">M</div>
-                  <div class="friend">S</div>
-                  <div class="friend">R</div>
-                </div>
-              </div>
-              <div class="quick-actions">
-                <button class="primary">Create Squad</button>
-                <button class="icon-btn">Join Game</button>
-              </div>
-            </div>
-          </section>
+          </div>
+          <div style="margin-top: 20px">
+            <div>450 / 600 XP</div>
+            <div class="xp-bar"><div class="xp-fill" data-pct="75"></div></div>
+          </div>
         </div>
-
-        <!-- Right column -->
-        <aside style="display:flex;flex-direction:column;gap:12px">
-          <div class="card progress-small">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-              <div style="font-weight:800">Your Progress</div>
-              <div style="color:var(--muted)">Level 12</div>
-            </div>
-            <div style="font-size:13px;color:var(--muted);margin-bottom:8px">450 / 600 XP</div>
-            <div style="height:12px;background:#070709;border-radius:999px;overflow:hidden"><div class="xp-fill" data-pct="75" style="width:0"></div></div>
-            <div style="margin-top:10px;color:var(--muted);font-size:13px">150 XP to next level</div>
+        <!-- Achievements -->
+        <div class="card">
+          <div class="section-title">Achievements</div>
+          <div class="badge-row">
+            <div class="badge">🏅 First Win</div>
+            <div class="badge">🔥 7 Day Streak</div>
+            <div class="badge">🎯 Perfect Score</div>
+            <div class="badge">⚡ Speed Runner</div>
           </div>
-
-          <div class="card">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-              <div style="font-weight:800">Subscription</div>
-              <div style="color:var(--muted)">Free</div>
-            </div>
-            <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Benefits: Basic leaderboards • Limited cloud saves</div>
-            <button class="primary" id="upgradeBtn2">Upgrade to Pro</button>
+        </div>
+        <!-- Social -->
+        <div class="card">
+          <div class="section-title">Social</div>
+          <div class="friends">
+            <div class="friend">A</div>
+            <div class="friend">M</div>
+            <div class="friend">S</div>
+            <div class="friend">R</div>
           </div>
-        </aside>
+          <button class="primary-btn" onclick="window.location.href='social.html'">Create Squad</button>
+        </div>
+      </div>
+      <!-- RIGHT -->
+      <div>
+        <!-- Progress -->
+        <div class="card">
+          <div class="section-title">Your Progress</div>
+          <div>Level 12</div>
+          <div style="color: #aaa; font-size: 14px">150 XP to next level</div>
+          <div class="xp-bar"><div class="xp-fill" data-pct="75"></div></div>
+        </div>
+        <!-- Subscription -->
+        <div class="card">
+          <div class="section-title">Subscription</div>
+          <div style="color: #aaa">Current Plan: Free</div>
+          <div style="margin-top: 10px; font-size: 14px; color: #ccc">
+            • Basic leaderboards<br />
+            • Limited cloud saves<br />
+            • Standard support
+          </div>
+          <button class="primary-btn" onclick="window.location.href='subscription.html'">Upgrade to Pro</button>
+        </div>
       </div>
     </div>
-  </main>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', ()=>{
-      // animate fills (safety clamped)
-      document.querySelectorAll('.xp-fill, .big-fill, .game-fill').forEach(el=>{
-        const pct = Math.max(0,Math.min(100,parseInt(el.getAttribute('data-pct')||0,10)));
-        requestAnimationFrame(()=>el.style.width = pct + '%');
-      });
-
-      // resume ctas
-      document.querySelectorAll('[data-game]').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          const g = btn.getAttribute('data-game');
-          btn.textContent = 'Resuming...'; btn.disabled = true;
-          setTimeout(()=>{ alert('Resumed '+g); btn.textContent = '▶ Resume'; btn.disabled = false; },700);
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        /* XP Animation */ document
+          .querySelectorAll(".xp-fill")
+          .forEach((el) => {
+            let pct = el.getAttribute("data-pct");
+            setTimeout(() => {
+              el.style.width = pct + "%";
+            }, 500);
+          });
+        /* 3D Tilt */ document.querySelectorAll(".card").forEach((card) => {
+          card.addEventListener("mousemove", (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = -(y - centerY) / 20;
+            const rotateY = (x - centerX) / 20;
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+          });
+          card.addEventListener("mouseleave", () => {
+            card.style.transform = "rotateX(0) rotateY(0)";
+          });
         });
+        /* Ripple */ document
+          .querySelectorAll(".primary-btn")
+          .forEach((btn) => {
+            btn.addEventListener("click", function (e) {
+              const circle = document.createElement("span");
+              const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+              circle.style.width = circle.style.height = diameter + "px";
+              circle.style.left = e.offsetX - diameter / 2 + "px";
+              circle.style.top = e.offsetY - diameter / 2 + "px";
+              btn.appendChild(circle);
+              setTimeout(() => circle.remove(), 600);
+            });
+          });
       });
-
-      // upgrade handlers (placeholder)
-      const upgrades = document.querySelectorAll('#upgradeBtn, #upgradeBtn2');
-      upgrades.forEach(b=>b.addEventListener('click', ()=>{
-        alert('Redirecting to upgrade flow...');
-      }));
-
-      // small parallax
-      const wrap = document.querySelector('.wrap');
-      window.addEventListener('mousemove', (e)=>{
-        const w = window.innerWidth, h = window.innerHeight;
-        const nx = (e.clientX - w/2)/w, ny = (e.clientY - h/2)/h;
-        wrap.style.transform = `translate3d(${nx*6}px, ${ny*6}px, 0)`;
-      });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
