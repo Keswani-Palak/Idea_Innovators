@@ -1,75 +1,195 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>PlayVerse Dashboard</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PlayVerse — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0B0B0F;--violet:#8A2BE2;--muted:#9aa0b2;--card:#0f1220;--glass:rgba(255,255,255,0.02)}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:#e8eaf6;font-family:Roboto,system-ui,-apple-system,Segoe UI,Arial;display:flex;flex-direction:column}
+
+    /* Sticky top navigation */
+    header.topbar{position:sticky;top:0;z-index:60;backdrop-filter:blur(6px);background:linear-gradient(180deg,rgba(11,11,15,0.6),rgba(11,11,15,0.35));border-bottom:1px solid rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;padding:12px 20px}
+    .logo{font-weight:800;letter-spacing:1px;font-size:18px}
+    .logo span{color:var(--violet)}
+    .nav-left{display:flex;align-items:center;gap:12px}
+    .nav-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--violet),#b266ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#061018}
+    .nav-user{display:flex;flex-direction:column;line-height:1}
+    .nav-username{font-weight:700}
+    .nav-level{font-size:12px;color:var(--muted)}
+
+    .nav-right{display:flex;align-items:center;gap:12px}
+    .icon-btn{background:transparent;border:0;color:var(--muted);padding:8px;border-radius:8px;cursor:pointer}
+    .sub-pill{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:linear-gradient(90deg,rgba(138,43,226,0.08),rgba(138,43,226,0.02));color:var(--violet);font-weight:700}
+    .upgrade{background:transparent;border:1px solid rgba(138,43,226,0.16);color:var(--violet);padding:8px 12px;border-radius:8px;cursor:pointer}
+
+    main{flex:1;padding:28px 20px;display:flex;justify-content:center}
+    .wrap{width:100%;max-width:1100px;perspective:1200px}
+
+    /* Layout */
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start}
+
+    /* Continue Playing (primary) */
+    .continue-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
+    .continue-card h2{margin:0 0 12px 0;font-size:18px}
+    .continue-big{display:flex;gap:18px;align-items:center}
+    .thumb-lg{width:220px;height:124px;border-radius:12px;background:linear-gradient(135deg,#181824,#2a1538);box-shadow:inset 0 -8px 30px rgba(0,0,0,0.5)}
+    .continue-info{flex:1}
+    .game-title{font-weight:800;font-size:18px;margin-bottom:8px}
+    .big-progress{height:12px;background:#070709;border-radius:999px;overflow:hidden;margin-bottom:12px}
+    .big-fill{height:100%;width:0;background:linear-gradient(90deg,var(--violet),#b266ff);box-shadow:0 12px 40px rgba(138,43,226,0.12);transition:width 900ms cubic-bezier(.2,.9,.2,1)}
+    .resume-cta{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;border:1px solid rgba(138,43,226,0.16);color:var(--violet);cursor:pointer;font-weight:800}
+
+    /* Achievements preview (horizontal) */
+    .ach-row{display:flex;align-items:center;gap:12px;overflow:auto;padding:10px 6px}
+    .badge-pill{min-width:140px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:12px;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,0.02)}
+    .badge-ico{width:44px;height:44px;border-radius:8px;background:linear-gradient(90deg,var(--violet),#b266ff);display:flex;align-items:center;justify-content:center;font-weight:800;color:#061018}
+    .view-all{margin-left:auto;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer}
+
+    /* Right column cards */
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+    .progress-small{margin-bottom:10px}
+    .friends-row{display:flex;align-items:center;gap:10px}
+    .friend{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2b1b3a,#1b2740);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .quick-actions{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+    .primary{background:linear-gradient(90deg,var(--violet),#b266ff);color:#061018;padding:10px;border-radius:8px;border:0;cursor:pointer;font-weight:800}
+
+    /* small helpers */
+    h3.section-title{font-size:13px;margin:0 0 10px 0;color:#e8eaf6}
+
+    @media (max-width:980px){.grid{grid-template-columns:1fr}.thumb-lg{width:160px;height:96px}}
+    @media (prefers-reduced-motion:reduce){.big-fill,.game-fill,.xp-fill{transition:none!important;animation:none!important}}
+  </style>
 </head>
-<body onload="checkAuth(); loadUserData();">
+<body>
+  <header class="topbar">
+    <div class="nav-left">
+      <div class="nav-avatar">P</div>
+      <div class="nav-user">
+        <div class="nav-username">Palak</div>
+        <div class="nav-level">Lv. 12</div>
+      </div>
+    </div>
 
-<nav>
-    <div class="logo">PlayVerse</div>
     <div class="nav-right">
-        <span id="navUser"></span>
-        <span>Level <span id="level"></span></span>
-        <span>🪙 <span id="coins"></span></span>
-        <button onclick="toggleSubscription()" class="sub-btn">
-            <span id="subStatus"></span>
-        </button>
-        <button onclick="logout()">Logout</button>
+      <button class="icon-btn" aria-label="notifications">🔔</button>
+      <div class="sub-pill">Free</div>
+      <button class="upgrade" id="upgradeBtn">Upgrade</button>
     </div>
-</nav>
+  </header>
 
-<div class="grid">
+  <main>
+    <div class="wrap">
+      <div class="grid">
+        <!-- Primary column -->
+        <div>
+          <!-- Continue Playing (primary) -->
+          <section class="continue-card card-3d">
+            <h2>Continue Playing</h2>
+            <div class="continue-big">
+              <div class="thumb-lg" aria-hidden></div>
+              <div class="continue-info">
+                <div class="game-title">Horizon: Shadow</div>
+                <div class="big-progress"><div class="big-fill" data-pct="68"></div></div>
+                <div style="display:flex;gap:12px;align-items:center">
+                  <div style="color:var(--muted)">68% completed • Last played 2 days ago</div>
+                  <button class="resume-cta" data-game="horizon">▶ Resume</button>
+                </div>
+              </div>
+            </div>
 
-<!-- PROFILE -->
-<div class="card">
-    <h2>Gamified Profile</h2>
-    <div class="xp-bar"><div id="xpFill" class="xp-fill"></div></div>
-    <button onclick="completeMission()">Complete Mission (+XP)</button>
-    <div id="badge" class="badge"></div>
-</div>
+            <!-- Achievements preview -->
+            <div style="margin-top:16px">
+              <h3 class="section-title">Achievements</h3>
+              <div class="ach-row" aria-label="achievements">
+                <div class="badge-pill"><div class="badge-ico">🏅</div><div><div style="font-weight:700">First Win</div><div style="color:var(--muted);font-size:13px">Unlocked</div></div></div>
+                <div class="badge-pill"><div class="badge-ico">🔥</div><div><div style="font-weight:700">7 Day Streak</div><div style="color:var(--muted);font-size:13px">Unlocked</div></div></div>
+                <div class="badge-pill"><div class="badge-ico">🎯</div><div><div style="font-weight:700">Perfect Score</div><div style="color:var(--muted);font-size:13px">Locked</div></div></div>
+                <button class="view-all">View All</button>
+              </div>
+            </div>
+          </section>
 
-<!-- LEADERBOARD -->
-<div class="card">
-    <h2>Leaderboard (USP)</h2>
-    <table id="leaderboardTable"></table>
-</div>
+          <!-- Social preview (light) -->
+          <section style="margin-top:14px" class="card">
+            <h3 class="section-title">Social</h3>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="display:flex;flex-direction:column">
+                <div style="color:var(--muted);font-size:13px;margin-bottom:8px">Friends online</div>
+                <div class="friends-row">
+                  <div class="friend">A</div>
+                  <div class="friend">M</div>
+                  <div class="friend">S</div>
+                  <div class="friend">R</div>
+                </div>
+              </div>
+              <div class="quick-actions">
+                <button class="primary">Create Squad</button>
+                <button class="icon-btn">Join Game</button>
+              </div>
+            </div>
+          </section>
+        </div>
 
-<!-- AI -->
-<div class="card">
-    <h2>AI Recommendation</h2>
-    <textarea id="aiInput" placeholder="Describe your mood..."></textarea>
-    <button onclick="getAIRecommendation()">Generate</button>
-    <div id="aiOutput" class="ai-box"></div>
-</div>
+        <!-- Right column -->
+        <aside style="display:flex;flex-direction:column;gap:12px">
+          <div class="card progress-small">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <div style="font-weight:800">Your Progress</div>
+              <div style="color:var(--muted)">Level 12</div>
+            </div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:8px">450 / 600 XP</div>
+            <div style="height:12px;background:#070709;border-radius:999px;overflow:hidden"><div class="xp-fill" data-pct="75" style="width:0"></div></div>
+            <div style="margin-top:10px;color:var(--muted);font-size:13px">150 XP to next level</div>
+          </div>
 
-<!-- HACKATHON ZONE -->
-<div class="card hackathon-card">
-    <h2>Hackathon Arena 🧠🔥</h2>
-    <div id="hackathonInfo">
-        <p id="hackathonName">Next Hack: PlayVerse Build Jam</p>
-        <p>Starts in: <span id="hackathonCountdown">--:--:--</span></p>
-        <button id="joinHackathonBtn">Join Now</button>
-        <button id="viewProjectsBtn">View Submissions</button>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <div style="font-weight:800">Subscription</div>
+              <div style="color:var(--muted)">Free</div>
+            </div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Benefits: Basic leaderboards • Limited cloud saves</div>
+            <button class="primary" id="upgradeBtn2">Upgrade to Pro</button>
+          </div>
+        </aside>
+      </div>
     </div>
-    <div id="hackathonProjects" class="hidden">
-        <h3>Submitted Projects</h3>
-        <ul id="projectList"></ul>
-    </div>
-</div>
+  </main>
 
-<!-- CHAT -->
-<div class="card">
-    <h2>Social Lobby</h2>
-    <div id="chatBox" class="chat-box"></div>
-    <div class="chat-row">
-        <input id="chatInput" placeholder="Message...">
-        <button onclick="sendMessage()">Send</button>
-    </div>
-</div>
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // animate fills (safety clamped)
+      document.querySelectorAll('.xp-fill, .big-fill, .game-fill').forEach(el=>{
+        const pct = Math.max(0,Math.min(100,parseInt(el.getAttribute('data-pct')||0,10)));
+        requestAnimationFrame(()=>el.style.width = pct + '%');
+      });
 
-</div>
+      // resume ctas
+      document.querySelectorAll('[data-game]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const g = btn.getAttribute('data-game');
+          btn.textContent = 'Resuming...'; btn.disabled = true;
+          setTimeout(()=>{ alert('Resumed '+g); btn.textContent = '▶ Resume'; btn.disabled = false; },700);
+        });
+      });
 
-<script src="app.js"></script>
+      // upgrade handlers (placeholder)
+      const upgrades = document.querySelectorAll('#upgradeBtn, #upgradeBtn2');
+      upgrades.forEach(b=>b.addEventListener('click', ()=>{
+        alert('Redirecting to upgrade flow...');
+      }));
+
+      // small parallax
+      const wrap = document.querySelector('.wrap');
+      window.addEventListener('mousemove', (e)=>{
+        const w = window.innerWidth, h = window.innerHeight;
+        const nx = (e.clientX - w/2)/w, ny = (e.clientY - h/2)/h;
+        wrap.style.transform = `translate3d(${nx*6}px, ${ny*6}px, 0)`;
+      });
+    });
+  </script>
 </body>
 </html>

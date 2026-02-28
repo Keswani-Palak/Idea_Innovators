@@ -145,3 +145,56 @@ aiOutput.innerText=
 data?.candidates?.[0]?.content?.parts?.[0]?.text
 || "Error generating recommendation.";
 }
+
+// ------------- HACKATHON LOGIC ----------------
+
+const hackathon = {
+	name: "PlayVerse Build Jam",
+	start: new Date(new Date().getTime() + 5 * 60 * 60 * 1000) // 5 hours from now
+};
+
+function initHackathon(){
+	document.getElementById('hackathonName').innerText = `Next Hack: ${hackathon.name}`;
+	updateHackathonCountdown();
+	setInterval(updateHackathonCountdown, 1000);
+	document.getElementById('joinHackathonBtn').addEventListener('click', joinHackathon);
+	document.getElementById('viewProjectsBtn').addEventListener('click', viewSubmissions);
+}
+
+function updateHackathonCountdown(){
+	const now = new Date();
+	const diff = hackathon.start - now;
+	if(diff <= 0){
+		document.getElementById('hackathonCountdown').innerText = "Live now!";
+		return;
+	}
+	const hrs = Math.floor(diff/1000/60/60);
+	const mins = Math.floor(diff/1000/60) % 60;
+	const secs = Math.floor(diff/1000) % 60;
+	document.getElementById('hackathonCountdown').innerText =
+		`${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+}
+
+function joinHackathon(){
+	alert("You've joined the hackathon! Start building your project.");
+	localStorage.setItem('joinedHackathon', 'true');
+}
+
+function viewSubmissions(){
+	const listEl = document.getElementById('projectList');
+	listEl.innerHTML = '';
+	const projects = [
+		{user:'Janu',title:'PSVronix AI Bot'},
+		{user:'Riya',title:'Leaderboard Enhancer'},
+		{user:'Alex',title:'Chatroom Quest'}
+	];
+	projects.forEach(p => {
+		const li = document.createElement('li');
+		li.innerText = `${p.user} – ${p.title}`;
+		listEl.appendChild(li);
+	});
+	document.getElementById('hackathonProjects').classList.remove('hidden');
+}
+
+// initialize hackathon when dashboard loads
+window.addEventListener('load', initHackathon);

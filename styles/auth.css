@@ -81,8 +81,10 @@ body {
 .auth-body {
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
     background: linear-gradient(135deg, var(--dark-bg) 0%, #1a0f3a 100%);
     position: relative;
     overflow: hidden;
@@ -129,7 +131,7 @@ body {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(124, 58, 237, 0.3);
     border-radius: var(--radius-xl);
-    padding: var(--spacing-2xl);
+    padding: var(--spacing-xl);
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.3),
         inset 0 1px 1px rgba(255, 255, 255, 0.1),
@@ -170,7 +172,7 @@ body {
    =========================== */
 .auth-header {
     text-align: center;
-    margin-bottom: var(--spacing-2xl);
+    margin-bottom: var(--spacing-lg);
     animation: headerFadeIn 0.8s ease-out 0.2s both;
 }
 
@@ -242,7 +244,7 @@ body {
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
 }
 
 .form-group {
@@ -303,6 +305,7 @@ body {
     font-family: inherit;
     position: relative;
     overflow: hidden;
+    z-index: 2;
 }
 
 .form-input::placeholder {
@@ -324,6 +327,7 @@ body {
         transparent
     );
     transition: left var(--transition-fast);
+    pointer-events: none;
 }
 
 .form-input:focus {
@@ -370,13 +374,19 @@ body {
    =========================== */
 .password-wrapper {
     position: relative;
-    display: flex;
-    align-items: center;
+    display: block;
+}
+
+.password-wrapper .form-input {
+    width: 100%;
+    padding-right: 45px;
 }
 
 .toggle-password {
     position: absolute;
-    right: var(--spacing-lg);
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
     background: none;
     border: none;
     cursor: pointer;
@@ -386,6 +396,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 3;
+    pointer-events: auto;
 }
 
 .toggle-password:hover {
@@ -439,6 +451,7 @@ body {
     font-size: var(--font-size-sm);
     gap: var(--spacing-md);
     animation: formGroupFadeIn 0.6s ease-out 0.6s both;
+    z-index: 2;
 }
 
 .checkbox-label {
@@ -448,6 +461,8 @@ body {
     cursor: pointer;
     color: var(--text-secondary);
     transition: all var(--transition-base);
+    position: relative;
+    z-index: 2;
 }
 
 .checkbox-label:hover {
@@ -461,6 +476,9 @@ body {
     accent-color: var(--primary-violet);
     cursor: pointer;
     transition: all var(--transition-base);
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
 }
 
 .checkbox-input:checked {
@@ -572,10 +590,12 @@ body {
 }
 
 .btn-large {
-    width: 100%;
-    padding: var(--spacing-lg) var(--spacing-xl);
-    font-size: var(--font-size-lg);
-    min-height: 48px;
+    width: auto;
+    align-self: center;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    min-height: 40px;
+    max-width: 260px;
 }
 
 .btn-text {
@@ -805,6 +825,7 @@ body {
     height: 100%;
     z-index: 0;
     overflow: hidden;
+    pointer-events: none;
 }
 
 .glow {
@@ -812,6 +833,7 @@ body {
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.3;
+    pointer-events: none;
 }
 
 .glow-1 {
@@ -895,6 +917,7 @@ body {
     .auth-container {
         max-width: 100%;
         padding: var(--spacing-md);
+        
     }
     
     .auth-box {
@@ -962,4 +985,41 @@ body {
     .auth-box {
         background: rgba(16, 23, 50, 0.8);
     }
+}
+
+@media (min-height: 800px) {
+    .auth-body {
+        align-items: center;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+/* ===========================
+   REMOVE DEFAULT PASSWORD EYE
+   =========================== */
+
+/* Remove default Edge / IE reveal icon */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+/* Remove default Chrome / Edge autofill eye */
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-contacts-auto-fill-button {
+    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Remove Safari decoration */
+input[type="password"]::-webkit-textfield-decoration-container {
+    display: none !important;
+}
+
+/* Ensure clean appearance */
+input[type="password"] {
+    appearance: none;
+    -webkit-appearance: none;
 }
