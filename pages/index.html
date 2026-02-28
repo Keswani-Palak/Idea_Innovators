@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PlayVerse - Auth</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-container">
+    <h1>PlayVerse</h1>
+
+    <div class="tabs">
+        <button onclick="showLogin()">Login</button>
+        <button onclick="showSignup()">Sign Up</button>
+    </div>
+
+    <div id="loginForm">
+        <input id="loginUser" placeholder="Username">
+        <input id="loginPass" type="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="signupForm" style="display:none;">
+        <input id="signupUser" placeholder="Username">
+        <input id="signupPass" type="password" placeholder="Password">
+        <button onclick="signup()">Create Account</button>
+    </div>
+
+    <p id="authMessage"></p>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

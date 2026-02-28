@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PlayVerse - Secure Gaming Ecosystem Login">
+    <title>Login - PlayVerse</title>
+    <link rel="stylesheet" href="/styles/auth.css">
+    <link rel="stylesheet" href="/styles/common.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-container">
+    <div class="auth-box">
+        <div class="auth-header">
+            <h1>PlayVerse</h1>
+            <p class="auth-subtitle">Enter the Gaming Universe</p>
+        </div>
+
+        <form id="loginForm" class="auth-form" novalidate>
+            <!-- Username Field -->
+            <div class="form-group">
+                <label for="username" class="form-label">Username or Email</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username"
+                    class="form-input" 
+                    placeholder="Enter your username or email"
+                    required
+                    aria-label="Username or Email"
+                    autocomplete="username"
+                >
+                <span class="error-message" id="usernameError" role="alert"></span>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="password-wrapper">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password"
+                        class="form-input" 
+                        placeholder="Enter your password"
+                        required
+                        aria-label="Password"
+                        autocomplete="current-password"
+                    >
+                    <button 
+                        type="button" 
+                        class="toggle-password" 
+                        id="togglePassword"
+                        aria-label="Toggle password visibility"
+                    >
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+                <span class="error-message" id="passwordError" role="alert"></span>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="form-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="rememberMe" name="rememberMe" class="checkbox-input">
+                    <span>Remember me</span>
+                </label>
+                <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <!-- Login Button -->
+            <button type="submit" class="btn btn-primary btn-large" id="loginBtn">
+                <span class="btn-text">Login</span>
+                <span class="btn-loader hidden" id="btnLoader"></span>
+            </button>
+
+            <!-- Error Message -->
+            <div class="alert alert-error hidden" id="formError" role="alert">
+                <span id="errorText"></span>
+            </div>
+
+            <!-- Success Message -->
+            <div class="alert alert-success hidden" id="formSuccess" role="alert">
+                <span id="successText"></span>
+            </div>
+        </form>
+
+        <!-- Sign Up Link -->
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="signup.html" class="link-primary">Sign Up</a></p>
+        </div>
+
+        <!-- Social Login (Optional Enhancement) -->
+        <div class="social-divider">
+            <span>Or continue with</span>
+        </div>
+        <div class="social-login">
+            <button type="button" class="btn btn-social" id="googleLogin" aria-label="Login with Google">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/></svg>
+            </button>
+            <button type="button" class="btn btn-social" id="discordLogin" aria-label="Login with Discord">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.211.375-.444.865-.607 1.252a18.27 18.27 0 00-5.487 0c-.163-.387-.399-.877-.61-1.252a.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.073.073 0 00.08-.027c.462-.613.873-1.265 1.226-1.96a.072.072 0 00-.04-.1 13.19 13.19 0 01-1.872-.892.073.073 0 01-.008-.12c.126-.094.252-.192.372-.294a.072.072 0 01.075-.01c3.928 1.793 8.18 1.793 12.062 0a.072.072 0 01.075.009c.12.102.246.2.373.295a.073.073 0 01-.006.12c-.598.344-1.22.635-1.873.89a.072.072 0 00-.041.1c.36.698.77 1.35 1.226 1.96a.073.073 0 00.079.028 19.85 19.85 0 006.002-3.03.073.073 0 00.032-.057c.5-4.718.078-8.8-.386-13.126a.07.07 0 00-.031-.029z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="auth-background">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+        <div class="glow glow-3"></div>
+    </div>
+</div>
+
+<script src="scripts/auth.js" defer></script>
+
+</body>
+</html>

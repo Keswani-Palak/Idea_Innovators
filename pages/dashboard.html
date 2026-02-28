@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PlayVerse Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body onload="checkAuth(); loadUserData();">
+
+<nav>
+    <div class="logo">PlayVerse</div>
+    <div class="nav-right">
+        <span id="navUser"></span>
+        <span>Level <span id="level"></span></span>
+        <span>🪙 <span id="coins"></span></span>
+        <button onclick="toggleSubscription()" class="sub-btn">
+            <span id="subStatus"></span>
+        </button>
+        <button onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<div class="grid">
+
+<!-- PROFILE -->
+<div class="card">
+    <h2>Gamified Profile</h2>
+    <div class="xp-bar"><div id="xpFill" class="xp-fill"></div></div>
+    <button onclick="completeMission()">Complete Mission (+XP)</button>
+    <div id="badge" class="badge"></div>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="card">
+    <h2>Leaderboard (USP)</h2>
+    <table id="leaderboardTable"></table>
+</div>
+
+<!-- AI -->
+<div class="card">
+    <h2>AI Recommendation</h2>
+    <textarea id="aiInput" placeholder="Describe your mood..."></textarea>
+    <button onclick="getAIRecommendation()">Generate</button>
+    <div id="aiOutput" class="ai-box"></div>
+</div>
+
+<!-- HACKATHON ZONE -->
+<div class="card hackathon-card">
+    <h2>Hackathon Arena 🧠🔥</h2>
+    <div id="hackathonInfo">
+        <p id="hackathonName">Next Hack: PlayVerse Build Jam</p>
+        <p>Starts in: <span id="hackathonCountdown">--:--:--</span></p>
+        <button id="joinHackathonBtn">Join Now</button>
+        <button id="viewProjectsBtn">View Submissions</button>
+    </div>
+    <div id="hackathonProjects" class="hidden">
+        <h3>Submitted Projects</h3>
+        <ul id="projectList"></ul>
+    </div>
+</div>
+
+<!-- CHAT -->
+<div class="card">
+    <h2>Social Lobby</h2>
+    <div id="chatBox" class="chat-box"></div>
+    <div class="chat-row">
+        <input id="chatInput" placeholder="Message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
