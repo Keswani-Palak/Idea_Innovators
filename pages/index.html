@@ -1,34 +1,412 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>PlayVerse - Auth</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlayStation Main Page</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0B0B0F 0%, #1a0a2e 50%, #0B0B0F 100%);
+      color: #EEE;
+      font-family: 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      animation: fadeIn 0.8s ease-in;
+      background-attachment: fixed;
+    }
+
+    /* page & section entrance */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    section {
+      padding: 2.5rem 1rem;
+      opacity: 0;
+      animation: slideUp 0.6s ease forwards;
+    }
+    section:nth-of-type(1) { animation-delay: 0.2s; }
+    section:nth-of-type(2) { animation-delay: 0.4s; }
+    section:nth-of-type(3) { animation-delay: 0.6s; }
+    section:nth-of-type(4) { animation-delay: 0.8s; }
+
+    /* ─── top nav ───────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(11, 11, 15, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 2px solid #a020f0;
+      box-shadow: 0 4px 20px rgba(160, 32, 240, 0.3);
+      z-index: 1000;
+    }
+    
+    body {
+      padding-top: 70px;
+    }
+    .nav .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #a020f0, #ff006e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 20px rgba(160, 32, 240, 0.5);
+      font-family: 'Arial Black', sans-serif;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .nav .logo:hover {
+      transform: scale(1.05) rotateZ(2deg);
+    }
+    .nav .logo svg {
+      animation: rotateLogo 8s linear infinite;
+    }
+    .nav .logo:hover svg {
+      animation: rotateLogo 3s linear infinite;
+    }
+    @keyframes rotateLogo {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .nav .buttons button {
+      margin-left: 1rem;
+      background: linear-gradient(135deg, rgba(160, 32, 240, 0.2), rgba(255, 0, 110, 0.2));
+      border: 2px solid #a020f0;
+      color: #fff;
+      padding: 0.6rem 1.4rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .nav .buttons button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    .nav .buttons button:hover::before {
+      left: 100%;
+    }
+    .nav .buttons button:hover,
+    .nav .buttons button:focus {
+      box-shadow: 0 0 20px #a020f0, inset 0 0 10px rgba(160, 32, 240, 0.3);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    /* ─── common section styles ─────────────────────────── */
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #a020f0, #ff006e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #a020f0, #ff006e);
+      border-radius: 2px;
+    }
+    .cards {
+      display: flex;
+      overflow-x: auto;
+      gap: 1rem;
+      scroll-snap-type: x mandatory;
+      -webkit-scroll-snap-type: x mandatory;
+      padding-bottom: 0.5rem;
+    }
+    .card {
+      min-width: 446px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(160,32,240,0.1));
+      border-radius: 1rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(160, 32, 240, 0.3);
+      padding: 1rem;
+      position: relative;
+      flex-shrink: 0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      scroll-snap-align: start;
+      -webkit-scroll-snap-align: start;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(160, 32, 240, 0.1) 0%, transparent 70%);
+      transition: all 0.5s ease;
+      pointer-events: none;
+    }
+    .card:hover::before {
+      top: -25%;
+      left: -25%;
+      background: radial-gradient(circle, rgba(160, 32, 240, 0.3) 0%, transparent 70%);
+    }
+    .card:hover,
+    .card:focus-within {
+      transform: translateY(-8px) scale(1.04);
+      box-shadow: 0 15px 40px rgba(160,32,240,0.5), inset 0 0 20px rgba(160,32,240,0.1);
+      border-color: #a020f0;
+    }
+    .card img {
+      width: 100%;
+      max-height: 250px;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: 0.75rem;
+      display: block;
+    }
+    .card .title {
+      margin-top: 0.8rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      transition: color 0.3s ease;
+      text-align: center;
+    }
+    .card:hover .title {
+      color: #a020f0;
+    }
+    .card button {
+      margin-top: 0.8rem;
+      width: 100%;
+      background: linear-gradient(135deg, #a020f0, #ff006e);
+      border: none;
+      color: #fff;
+      padding: 0.8rem;
+      border-radius: 0.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 15px rgba(160, 32, 240, 0.4);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .card button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+    .card button:hover::after {
+      width: 300px;
+      height: 300px;
+    }
+    .card button:hover,
+    .card button:focus {
+      box-shadow: 0 8px 25px rgba(160, 32, 240, 0.6), inset 0 0 10px rgba(255, 0, 110, 0.2);
+      transform: translateY(-3px);
+      outline: none;
+    }
+
+    /* ─── instant play tweaks ────────────────────────────── */
+    .instant .cards .card {
+      min-width: 200px;
+    }
+    .instant .card::after {
+      content: '⚡';
+      position: absolute;
+      top: 0.8rem;
+      right: 0.8rem;
+      font-size: 1.8rem;
+      animation: pulse 2s infinite;
+      z-index: 10;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.1); }
+    }
+
+    /* ─── AI recommendation ─────────────────────────────── */
+    .ai {
+      border: 2px solid #a020f0;
+      border-radius: 1rem;
+      box-shadow: 0 0 30px rgba(160, 32, 240, 0.5), inset 0 0 20px rgba(160, 32, 240, 0.1);
+      background: linear-gradient(135deg, rgba(160, 32, 240, 0.05), rgba(255, 0, 110, 0.05));
+      padding: 1.5rem;
+      transition: all 0.4s ease;
+    }
+    .ai:hover {
+      box-shadow: 0 0 40px rgba(160, 32, 240, 0.7), inset 0 0 30px rgba(160, 32, 240, 0.15);
+    }
+    .ai .subtitle {
+      font-size: 0.9rem;
+      color: #b8a8d8;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    .ai .card .subtitle {
+      font-size: 0.8rem;
+      color: #a8a8d8;
+      margin-top: 0.5rem;
+      line-height: 1.4;
+    }
+
+    /* ─── responsive adjustments ────────────────────────── */
+    @media (max-width: 600px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav .buttons {
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
 </head>
-<body class="auth-body">
+<body>
 
-<div class="auth-container">
-    <h1>PlayVerse</h1>
-
-    <div class="tabs">
-        <button onclick="showLogin()">Login</button>
-        <button onclick="showSignup()">Sign Up</button>
+  <header class="nav">
+    <div class="logo">
+      <svg width="50" height="50" viewBox="0 0 50 50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+        <defs>
+          <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#a020f0;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#ff006e;stop-opacity:1" />
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <!-- Outer circle -->
+        <circle cx="25" cy="25" r="24" fill="none" stroke="url(#logoGrad)" stroke-width="2" opacity="0.6"/>
+        <!-- Inner geometric shape -->
+        <polygon points="25,8 38,17 38,33 25,42 12,33 12,17" fill="url(#logoGrad)" opacity="0.8" filter="url(#glow)"/>
+        <!-- Center circle -->
+        <circle cx="25" cy="25" r="8" fill="none" stroke="url(#logoGrad)" stroke-width="1.5"/>
+        <!-- Decorative dots -->
+        <circle cx="25" cy="12" r="1.5" fill="#ff006e"/>
+        <circle cx="35" cy="25" r="1.5" fill="#a020f0"/>
+        <circle cx="25" cy="38" r="1.5" fill="#ff006e"/>
+        <circle cx="15" cy="25" r="1.5" fill="#a020f0"/>
+      </svg>
+      <span style="vertical-align: middle;">SKYVERSE</span>
     </div>
-
-    <div id="loginForm">
-        <input id="loginUser" placeholder="Username">
-        <input id="loginPass" type="password" placeholder="Password">
-        <button onclick="login()">Login</button>
+    <div class="buttons">
+      <button>
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+          <defs>
+            <linearGradient id="coinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+            </linearGradient>
+            <filter id="coinGlow">
+              <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <!-- Coin body -->
+          <circle cx="10" cy="10" r="9" fill="url(#coinGrad)" filter="url(#coinGlow)"/>
+          <!-- Coin border -->
+          <circle cx="10" cy="10" r="9" fill="none" stroke="#DAA520" stroke-width="0.5"/>
+          <!-- Coin shine -->
+          <ellipse cx="7" cy="6" rx="3" ry="2" fill="rgba(255,255,255,0.4)"/>
+          <!-- Coin pattern -->
+          <circle cx="10" cy="10" r="4" fill="none" stroke="#DAA520" stroke-width="0.5" opacity="0.5"/>
+          <text x="10" y="12" font-size="6" text-anchor="middle" fill="#8B6914" font-weight="bold">$</text>
+        </svg>
+        <span>Rewards</span>
+      </button>
+      <button>Login</button>
     </div>
+  </header>
 
-    <div id="signupForm" style="display:none;">
-        <input id="signupUser" placeholder="Username">
-        <input id="signupPass" type="password" placeholder="Password">
-        <button onclick="signup()">Create Account</button>
+  <section class="games">
+    <div class="section-title">Games</div>
+    <div class="cards">
+      <div class="card">
+        <img src="/images/game1.jpg" alt="Game 1">
+        <div class="title">Street Rivals X</div>
+        <button>Play Now</button>
+      </div>
+      <div class="card">
+        <img src="/images/game2.jpeg" alt="Game 2">
+        <div class="title">Horizon Forbidden West</div>
+        <button>Play Now</button>
+      </div>
+      <div class="card">
+        <img src="/images/game3.jpeg" alt="Game 3">
+        <div class="title">Marvel's Spider-Man 2</div>
+        <button>Play Now</button>
+      </div>
+      <!-- add more hard‑coded cards if desired -->
     </div>
+  </section>
 
-    <p id="authMessage"></p>
-</div>
+  <section class="instant">
+    <div class="section-title">Instant Play</div>
+    <div class="cards">
+      <div class="card">
+        <img src="/images/instant1.jpeg" alt="Instant Game 1">
+        <div class="title">Astro's Challenge ></div>
+      </div>
+      <div class="card">
+        <img src="/images/instant2.jpeg" alt="Instant Game 2">
+        <div class="title">Pixel Quest ></div>
+      </div>
+      <div class="card">
+        <img src="/images/instant3.jpeg" alt="Instant Game 3">
+        <div class="title">Cosmic Runner ></div>
+      </div>
+    </div>
+  </section>
 
-<script src="app.js"></script>
+  <section class="ai">
+    <div class="section-title">AI Recommendation</div>
+    <div class="subtitle">Based on your play style</div>
+    
+    </div>
+  </section>
+
 </body>
 </html>
