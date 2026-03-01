@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Skyverse Profile</title>
     <style>
+      /* home link styles */
+      .home-link {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        font-size: 1.5rem;
+        text-decoration: none;
+        color: #eee;
+        background: rgba(255,255,255,0.1);
+        padding: 8px;
+        border-radius: 50%;
+        transition: background 0.3s;
+        z-index: 1100;
+      }
+      .home-link:hover {
+        background: rgba(255,255,255,0.2);
+      }
       /* ================= BASE ================= */
       * {
         margin: 0;
@@ -294,6 +311,8 @@
     </style>
   </head>
   <body>
+    <!-- home icon link -->
+    <a href="index.html" class="home-link" title="Home">🏠</a>
     <header class="nav"><div class="logo">
            <div class="logo">
       <svg width="50" height="50" viewBox="0 0 50 50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
@@ -322,7 +341,10 @@
         <circle cx="25" cy="38" r="1.5" fill="#ff006e"/>
         <circle cx="15" cy="25" r="1.5" fill="#a020f0"/>
       </svg>
-       SKYVERSE</div></header>
+       SKYVERSE</div>
+    </header>
+       
+
     <div class="container">
       <!-- LEFT -->
       <div>

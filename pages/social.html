@@ -6,6 +6,23 @@
   <title>Social Chat - SKYVERSE</title>
   <style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
   
+    /* home link styles */
+    .home-link {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 1.5rem;
+      text-decoration: none;
+      color: var(--text-light);
+      background: rgba(255,255,255,0.1);
+      padding: 8px;
+      border-radius: 50%;
+      transition: background 0.3s;
+      z-index: 1100;
+    }
+    .home-link:hover {
+      background: rgba(255,255,255,0.2);
+    }
     /* reset & base */
     *{box-sizing:border-box;margin:0;padding:0;}
     :root {
@@ -144,6 +161,8 @@
   </style>
 </head>
 <body>
+  <!-- home icon link -->
+ 
   <div class="container">
     <div class="friends-list">
       <div class="title">Friends Online</div>

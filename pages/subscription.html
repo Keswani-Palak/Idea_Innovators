@@ -16,6 +16,23 @@
         --glass: rgba(255, 255, 255, 0.05);
         --text-light: #e8eaf6;
       }
+      /* home link styles */
+      .home-link {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        font-size: 1.5rem;
+        text-decoration: none;
+        color: var(--text-light);
+        background: rgba(255,255,255,0.1);
+        padding: 8px;
+        border-radius: 50%;
+        transition: background 0.3s;
+        z-index: 1000;
+      }
+      .home-link:hover {
+        background: rgba(255,255,255,0.2);
+      }
       * {
         box-sizing: border-box;
       }
@@ -326,6 +343,8 @@
     </style>
   </head>
   <body>
+    <!-- home icon link -->
+    <a href="index.html" class="home-link" title="Home">🏠</a>
     <div class="container">
       <div class="wrap">
         <div class="header-section center">
